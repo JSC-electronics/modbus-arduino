@@ -36,6 +36,7 @@ void ModbusIP::task() {
     EthernetClient client = _server.available();
 
     if (client) {
+        numCon++;
         if (client.connected()) {
             int i = 0;
             while (client.available()){
@@ -82,4 +83,8 @@ void ModbusIP::task() {
             _len = 0;
         }
     }
+}
+
+uint16_t ModbusIP::getNumCon(){
+    return numCon;
 }

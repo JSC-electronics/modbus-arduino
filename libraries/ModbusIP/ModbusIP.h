@@ -13,12 +13,13 @@
 #define MODBUSIP_PORT 	  502
 #define MODBUSIP_MAXFRAME 200
 
-//#define TCP_KEEP_ALIVE
+#define TCP_KEEP_ALIVE
 
 class ModbusIP : public Modbus {
     private:
         EthernetServer _server;
         byte _MBAP[7];
+        uint16_t numCon = 0;
 
     public:
         ModbusIP();
@@ -28,6 +29,7 @@ class ModbusIP : public Modbus {
         void config(uint8_t *mac, IPAddress ip, IPAddress dns, IPAddress gateway);
         void config(uint8_t *mac, IPAddress ip, IPAddress dns, IPAddress gateway, IPAddress subnet);
         void task();
+        uint16_t getNumCon();
 };
 
 #endif //MODBUSIP_H
