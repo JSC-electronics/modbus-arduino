@@ -1,6 +1,6 @@
 /*
     ModbusIP_ESP8266.cpp - Source for Modbus IP ESP8266 AT Library
-    Copyright (C) 2015 André Sarmento Barbosa
+    Copyright (C) 2015 AndrÃ© Sarmento Barbosa
 */
 #include "ModbusIP_ESP8266AT.h"
 

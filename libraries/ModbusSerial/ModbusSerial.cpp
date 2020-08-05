@@ -116,6 +116,10 @@ bool ModbusSerial::receive(byte* frame) {
 bool ModbusSerial::send(byte* frame) {
     byte i;
 
+    if (_preTransmissionCallback) {
+        _preTransmissionCallback();
+    }
+
     if (this->_txPin >= 0) {
         digitalWrite(this->_txPin, HIGH);
         delay(1);
@@ -131,9 +135,17 @@ bool ModbusSerial::send(byte* frame) {
     if (this->_txPin >= 0) {
         digitalWrite(this->_txPin, LOW);
     }
+
+    if (_postTransmissionCallback) {
+        _postTransmissionCallback();
+    }
 }
 
 bool ModbusSerial::sendPDU(byte* pduframe) {
+    if (_preTransmissionCallback) {
+        _preTransmissionCallback();
+    }
+
     if (this->_txPin >= 0) {
         digitalWrite(this->_txPin, HIGH);
         delay(1);
@@ -158,6 +170,10 @@ bool ModbusSerial::sendPDU(byte* pduframe) {
 
     if (this->_txPin >= 0) {
         digitalWrite(this->_txPin, LOW);
+    }
+
+    if (_postTransmissionCallback) {
+        _postTransmissionCallback();
     }
 }
 
@@ -203,7 +219,33 @@ word ModbusSerial::calcCrc(byte address, byte* pduFrame, byte pduLen) {
     return (CRCHi << 8) | CRCLo;
 }
 
+/**
+Set pre-transmission callback function.
 
+This function gets called just before a Modbus message is sent over serial.
+Typical usage of this callback is to enable an RS485 transceiver's
+Driver Enable pin, and optionally disable its Receiver Enable pin.
 
+@see ModbusSerial::send(byte* frame)
+@see ModbusSerial::sendPDU(byte* pduframe)
+*/
+void ModbusSerial::setPreTransmissionCallback(void (*callback)()) {
+  _preTransmissionCallback = callback;
+}
 
+/**
+Set post-transmission callback function.
 
+This function gets called after a Modbus message has finished sending
+(i.e. after all data has been physically transmitted onto the serial
+bus).
+
+Typical usage of this callback is to enable an RS485 transceiver's
+Receiver Enable pin, and disable its Driver Enable pin.
+
+@see ModbusSerial::send(byte* frame)
+@see ModbusSerial::sendPDU(byte* pduframe)
+*/
+void ModbusSerial::setPostTransmissionCallback(void (*callback)()) {
+  _postTransmissionCallback = callback;
+}
