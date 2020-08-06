@@ -139,6 +139,8 @@ bool ModbusSerial::send(byte* frame) {
     if (_postTransmissionCallback) {
         _postTransmissionCallback();
     }
+
+    return true;
 }
 
 bool ModbusSerial::sendPDU(byte* pduframe) {
@@ -175,6 +177,8 @@ bool ModbusSerial::sendPDU(byte* pduframe) {
     if (_postTransmissionCallback) {
         _postTransmissionCallback();
     }
+
+    return true;
 }
 
 void ModbusSerial::task() {
